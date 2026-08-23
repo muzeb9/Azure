@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-data-copy-1"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_password": {
+			"value": ""
+		},
+		"FileServer1_password": {
+			"value": ""
+		},
+		"SqlServer1_password": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"value": "sqlsrv-610.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"value": "sqldb_610"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"value": "sqldba"
+		},
+		"FileServer1_properties_typeProperties_host": {
+			"value": "https://strgacc610.blob.core.windows.net/rawdatafiles"
+		},
+		"FileServer1_properties_typeProperties_userId": {
+			"value": "30-2007298.bhw@rootsivy.edu.pk"
+		},
+		"SqlServer1_properties_typeProperties_server": {
+			"value": "sqlsrv-610.database.windows.net"
+		},
+		"SqlServer1_properties_typeProperties_database": {
+			"value": "sqldb_610"
+		},
+		"SqlServer1_properties_typeProperties_userName": {
+			"value": "sqldba"
+		}
+	}
+}

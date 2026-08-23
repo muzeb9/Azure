@@ -1,0 +1,694 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-data-copy-1"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
+		"AzureSqlDatabase1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabase1'"
+		},
+		"FileServer1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileServer1'"
+		},
+		"SqlServer1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SqlServer1'"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlsrv-610.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqldb_610"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sqldba"
+		},
+		"FileServer1_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "https://strgacc610.blob.core.windows.net/rawdatafiles"
+		},
+		"FileServer1_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "30-2007298.bhw@rootsivy.edu.pk"
+		},
+		"SqlServer1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlsrv-610.database.windows.net"
+		},
+		"SqlServer1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqldb_610"
+		},
+		"SqlServer1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sqldba"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/crd_sql_to_blob_csv')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data3",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT top 1200 * FROM DBO.CRD_75_TAPIN_20250101",
+								"queryTimeout": "00:04:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "crdtapin",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DelimitedText1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-08-22T14:36:21Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/crdtapin')]",
+				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "cdrtaping1200.csv",
+						"container": "rawdatafiles"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/crdtapin')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServer1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "SRCE_PLMN_CODE",
+						"type": "varchar"
+					},
+					{
+						"name": "DEST_PLMN_CODE",
+						"type": "varchar"
+					},
+					{
+						"name": "FILE_SEQ_NO",
+						"type": "varchar"
+					},
+					{
+						"name": "REC_NO",
+						"type": "varchar"
+					},
+					{
+						"name": "RAP_FILE_SEQ_NO",
+						"type": "varchar"
+					},
+					{
+						"name": "RECORD_TYPE",
+						"type": "varchar"
+					},
+					{
+						"name": "IMSI",
+						"type": "varchar"
+					},
+					{
+						"name": "IMEI",
+						"type": "varchar"
+					},
+					{
+						"name": "MSISDN",
+						"type": "varchar"
+					},
+					{
+						"name": "MI_NO",
+						"type": "varchar"
+					},
+					{
+						"name": "MDN",
+						"type": "varchar"
+					},
+					{
+						"name": "CALLEVENT_START_TIMESTAMP",
+						"type": "varchar"
+					},
+					{
+						"name": "CALLEVENT_START_TIMEUTC",
+						"type": "varchar"
+					},
+					{
+						"name": "PDP_CONTEXT_TIMESTAMP",
+						"type": "varchar"
+					},
+					{
+						"name": "PDP_CONTEXT_TIMEUTC",
+						"type": "varchar"
+					},
+					{
+						"name": "CALL_DATE",
+						"type": "varchar"
+					},
+					{
+						"name": "YYYYMM",
+						"type": "varchar"
+					},
+					{
+						"name": "CAUSE_FOR_TERM",
+						"type": "varchar"
+					},
+					{
+						"name": "CHARGED_ITEM",
+						"type": "varchar"
+					},
+					{
+						"name": "TOTAL_DURATION",
+						"type": "varchar"
+					},
+					{
+						"name": "CEIL_DURATION",
+						"type": "varchar"
+					},
+					{
+						"name": "DATA_VOL_IN",
+						"type": "varchar"
+					},
+					{
+						"name": "DATA_VOL_OUT",
+						"type": "varchar"
+					},
+					{
+						"name": "SIM_TOOLKIT_IND",
+						"type": "varchar"
+					},
+					{
+						"name": "PARTIAL_TYPE_IND",
+						"type": "varchar"
+					},
+					{
+						"name": "BASIC_SRVC_TYPE",
+						"type": "varchar"
+					},
+					{
+						"name": "SRVC_CODE",
+						"type": "varchar"
+					},
+					{
+						"name": "SRVC_TYPE",
+						"type": "varchar"
+					},
+					{
+						"name": "CELL_ID",
+						"type": "varchar"
+					},
+					{
+						"name": "LOCATION_AREA",
+						"type": "varchar"
+					},
+					{
+						"name": "CALL_REFERENCE",
+						"type": "varchar"
+					},
+					{
+						"name": "DEST_NETWORK",
+						"type": "varchar"
+					},
+					{
+						"name": "ORIGINATING_NETWORK",
+						"type": "varchar"
+					},
+					{
+						"name": "REC_ENTITY_ID",
+						"type": "varchar"
+					},
+					{
+						"name": "REC_ENTITY_TYPE",
+						"type": "varchar"
+					},
+					{
+						"name": "NETWORK_ACCESS_ID",
+						"type": "varchar"
+					},
+					{
+						"name": "PDP_ADDRESS",
+						"type": "varchar"
+					},
+					{
+						"name": "CHARGING_ID",
+						"type": "varchar"
+					},
+					{
+						"name": "ACCESS_POINT_NAME_NI",
+						"type": "varchar"
+					},
+					{
+						"name": "ACCESS_POINT_NAME_OI",
+						"type": "varchar"
+					},
+					{
+						"name": "CML_ACCESS_POINT_NAME_NI",
+						"type": "varchar"
+					},
+					{
+						"name": "CML_ACCESS_POINT_NAME_OI",
+						"type": "varchar"
+					},
+					{
+						"name": "HOME_BID",
+						"type": "varchar"
+					},
+					{
+						"name": "HOME_LOCATION_DESC",
+						"type": "varchar"
+					},
+					{
+						"name": "SERVING_NETWORK",
+						"type": "varchar"
+					},
+					{
+						"name": "SERVING_BID",
+						"type": "varchar"
+					},
+					{
+						"name": "SERVING_LOCATION_DESC",
+						"type": "varchar"
+					},
+					{
+						"name": "DIALLED_DIGITS",
+						"type": "varchar"
+					},
+					{
+						"name": "CALLED_NUMBER",
+						"type": "varchar"
+					},
+					{
+						"name": "CALLING_NO",
+						"type": "varchar"
+					},
+					{
+						"name": "CALLED_PLACE",
+						"type": "varchar"
+					},
+					{
+						"name": "CALLED_REGION",
+						"type": "varchar"
+					},
+					{
+						"name": "CAMEL_DESTINATION_NUMBER",
+						"type": "varchar"
+					},
+					{
+						"name": "THIRD_PARTY_NUMBER",
+						"type": "varchar"
+					},
+					{
+						"name": "SMS_DEST_NO",
+						"type": "varchar"
+					},
+					{
+						"name": "SMS_ORIGINATOR",
+						"type": "varchar"
+					},
+					{
+						"name": "CTL_1",
+						"type": "varchar"
+					},
+					{
+						"name": "CTL_2",
+						"type": "varchar"
+					},
+					{
+						"name": "CTL_3",
+						"type": "varchar"
+					},
+					{
+						"name": "TYPE_OF_NUMBER",
+						"type": "varchar"
+					},
+					{
+						"name": "CHARGEABLE_UNITS",
+						"type": "varchar"
+					},
+					{
+						"name": "CHARGED_UNITS",
+						"type": "varchar"
+					},
+					{
+						"name": "CHARGE",
+						"type": "varchar"
+					},
+					{
+						"name": "TOTAL_TAX",
+						"type": "varchar"
+					},
+					{
+						"name": "TOTAL_DISC",
+						"type": "varchar"
+					},
+					{
+						"name": "CHRG_TYPE_00",
+						"type": "varchar"
+					},
+					{
+						"name": "CHRG_TYPE_01",
+						"type": "varchar"
+					},
+					{
+						"name": "CHRG_TYPE_03",
+						"type": "varchar"
+					},
+					{
+						"name": "CHRG_TYPE_04",
+						"type": "varchar"
+					},
+					{
+						"name": "CHRG_TYPE_21",
+						"type": "varchar"
+					},
+					{
+						"name": "CHRG_TYPE_50",
+						"type": "varchar"
+					},
+					{
+						"name": "TAX_TYPE_01",
+						"type": "varchar"
+					},
+					{
+						"name": "TAX_TYPE_02",
+						"type": "varchar"
+					},
+					{
+						"name": "TAX_TYPE_03",
+						"type": "varchar"
+					},
+					{
+						"name": "TAX_TYPE_04",
+						"type": "varchar"
+					},
+					{
+						"name": "CIF",
+						"type": "varchar"
+					},
+					{
+						"name": "CIF_TAX",
+						"type": "varchar"
+					},
+					{
+						"name": "SUPL_SRVC_CHARGE",
+						"type": "varchar"
+					},
+					{
+						"name": "SUPL_SRVC_TAX",
+						"type": "varchar"
+					},
+					{
+						"name": "SUPL_SRVC_CODE_1",
+						"type": "varchar"
+					},
+					{
+						"name": "SUPL_SRVC_CODE_2",
+						"type": "varchar"
+					},
+					{
+						"name": "SUPL_SRVC_CODE_3",
+						"type": "varchar"
+					},
+					{
+						"name": "CAMEL_SRVC_LEVEL",
+						"type": "varchar"
+					},
+					{
+						"name": "CAMLE_SRVC_KEY",
+						"type": "varchar"
+					},
+					{
+						"name": "CALLED_COUNTRY_CODE",
+						"type": "varchar"
+					},
+					{
+						"name": "LOC_INT_CALL",
+						"type": "varchar"
+					},
+					{
+						"name": "CAMEL_IND",
+						"type": "varchar"
+					},
+					{
+						"name": "SUPL_SRVC_IND",
+						"type": "varchar"
+					},
+					{
+						"name": "REC_ENTITY_TYPE_LIST_2",
+						"type": "varchar"
+					},
+					{
+						"name": "REC_ENTITY_ID_LIST_2",
+						"type": "varchar"
+					},
+					{
+						"name": "REC_ENTITY_TYPE_LIST_3",
+						"type": "varchar"
+					},
+					{
+						"name": "REC_ENTITY_ID_LIST_3",
+						"type": "varchar"
+					},
+					{
+						"name": "REC_ENTITY_TYPE_LIST_4",
+						"type": "varchar"
+					},
+					{
+						"name": "REC_ENTITY_ID_LIST_4",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "CRD_75_TAPIN_20250101"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SqlServer1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('AzureSqlDatabase1_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSqlDatabase1_properties_typeProperties_database')]",
+					"encrypt": "optional",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('AzureSqlDatabase1_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzureSqlDatabase1_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileServer1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('FileServer1_properties_typeProperties_host')]",
+					"userId": "[parameters('FileServer1_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FileServer1_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SqlServer1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"server": "[parameters('SqlServer1_properties_typeProperties_server')]",
+					"database": "[parameters('SqlServer1_properties_typeProperties_database')]",
+					"encrypt": "optional",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('SqlServer1_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SqlServer1_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				},
+				"managedVirtualNetwork": {
+					"type": "ManagedVirtualNetworkReference",
+					"referenceName": "default"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default')]",
+			"type": "Microsoft.DataFactory/factories/managedVirtualNetworks",
+			"apiVersion": "2018-06-01",
+			"properties": {},
+			"dependsOn": []
+		}
+	]
+}
