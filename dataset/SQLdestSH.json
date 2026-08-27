@@ -1,5 +1,5 @@
 {
-	"name": "DestinationDataset_39n",
+	"name": "SQLdestSH",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SqlServerSelfHost",

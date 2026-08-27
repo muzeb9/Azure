@@ -25,8 +25,8 @@
 				],
 				"typeProperties": {
 					"source": {
-						"type": "OracleSource",
-						"oracleReaderQuery": "select * from TELCO.CRD_75_TAPIN",
+						"type": "SqlServerSource",
+						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"sink": {
@@ -34,17 +34,25 @@
 						"tableOption": "autoCreate"
 					},
 					"enableStaging": false,
-					"validateDataConsistency": false
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_39n",
+						"referenceName": "SQLdestSH",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_39n",
+						"referenceName": "SQLdestSH",
 						"type": "DatasetReference"
 					}
 				]
