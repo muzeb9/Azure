@@ -1,0 +1,21 @@
+{
+	"name": "SqlServerSelfHost",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": "winmac",
+			"database": "AdventureWorks2022",
+			"encrypt": "optional",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "sa",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIwZTAzY2EwZS00MDdkLTQ4ZWItYjU0MC1mN2QwZTU3MTdlNWIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "OracleSelfHost",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
