@@ -1,0 +1,15 @@
+{
+	"name": "SourceDataset_39n",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ora_selfhost",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "OracleTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "newQuery0"
+		}
+	}
+}
