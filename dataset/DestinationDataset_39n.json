@@ -1,0 +1,16 @@
+{
+	"name": "DestinationDataset_39n",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServerSelfHost",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "<Custom query>"
+		}
+	}
+}
