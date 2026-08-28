@@ -1,0 +1,16 @@
+{
+	"name": "CRD_75_TAPIN",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ora_selfhost",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "OracleTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "",
+			"table": "CRD_75_TAPIN"
+		}
+	}
+}
