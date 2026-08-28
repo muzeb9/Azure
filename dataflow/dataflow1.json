@@ -120,7 +120,13 @@
 				"     validateSchema: false,",
 				"     inferDriftedColumnTypes: true,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 aggregate() ~> aggregate1"
+				"source1 aggregate(groupBy(SRCE_PLMN_CODE,",
+				"          DEST_PLMN_CODE,",
+				"          IMSI),",
+				"     DATA_VOL_IN = ERROR_FUNCTION(''),",
+				"          DATA_VOL_OUT = ERROR_FUNCTION(''),",
+				"          CHARGE = ERROR_FUNCTION(''),",
+				"          TOTAL_TAX = ERROR_FUNCTION('')) ~> aggregate1"
 			]
 		}
 	}
