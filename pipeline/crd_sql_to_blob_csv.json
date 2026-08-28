@@ -16,10 +16,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlServerSource",
-						"sqlReaderQuery": "SELECT top 1200 * FROM DBO.CRD_75_TAPIN_20250101",
-						"queryTimeout": "00:04:00",
-						"partitionOption": "None"
+						"type": "OracleSource",
+						"oracleReaderQuery": "select * from CRD_75_TAPIN\nWHERE ROWNUM <= 25000",
+						"partitionOption": "None",
+						"numberPrecision": 38,
+						"numberScale": 18,
+						"queryTimeout": "02:00:00"
 					},
 					"sink": {
 						"type": "DelimitedTextSink",
@@ -44,7 +46,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "crdtapin",
+						"referenceName": "ORAsrcSHcrdDS",
 						"type": "DatasetReference"
 					}
 				],
