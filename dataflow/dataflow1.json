@@ -17,10 +17,6 @@
 				{
 					"name": "aggregate1",
 					"description": "DATA"
-				},
-				{
-					"name": "MapDrifted1",
-					"description": "Creates an explicit mapping for each drifted column"
 				}
 			],
 			"scriptLines": [
@@ -124,15 +120,7 @@
 				"     validateSchema: false,",
 				"     inferDriftedColumnTypes: true,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"MapDrifted1 aggregate() ~> aggregate1",
-				"source1 derive(SRCE_PLMN_CODE = toString(byName('SRCE_PLMN_CODE')),",
-				"          DEST_PLMN_CODE = toString(byName('DEST_PLMN_CODE')),",
-				"          FILE_SEQ_NO = toString(byName('FILE_SEQ_NO')),",
-				"          IMSI = toString(toLong(byName('IMSI'))),",
-				"          TOTAL_DURATION = toString(toLong(byName('TOTAL_DURATION'))),",
-				"          CEIL_DURATION = toString(toLong(byName('CEIL_DURATION'))),",
-				"          CHARGE = toString(toDouble(byName('CHARGE'))),",
-				"          CHARGEABLE_UNITS = toString(toLong(byName('CHARGEABLE_UNITS')))) ~> MapDrifted1"
+				"source1 aggregate() ~> aggregate1"
 			]
 		}
 	}
