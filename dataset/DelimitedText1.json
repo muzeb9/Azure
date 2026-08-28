@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "cdrtaping1200.csv",
+				"fileName": "cdrtapin1200.csv",
 				"container": "rawdatafiles"
 			},
 			"columnDelimiter": ",",
