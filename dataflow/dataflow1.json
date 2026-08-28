@@ -5,21 +5,19 @@
 		"typeProperties": {
 			"sources": [
 				{
-					"dataset": {
-						"referenceName": "SQLdestSH",
-						"type": "DatasetReference"
-					},
 					"name": "source1"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "aggregate1"
+				}
+			],
 			"scriptLines": [
 				"source(allowSchemaDrift: false,",
-				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     query: 'SELECT TOP (1000) [SalesOrderID]\\n      ,[SalesOrderDetailID]\\n      ,[CarrierTrackingNumber]\\n      ,[OrderQty]\\n      ,[ProductID]\\n      ,[SpecialOfferID]\\n      ,[UnitPrice]\\n      ,[UnitPriceDiscount]\\n      ,[LineTotal]\\n      ,[rowguid]\\n      ,[ModifiedDate]\\n  FROM [AdventureWorks2022].[Sales].[SalesOrderDetail]\\n',",
-				"     format: 'query') ~> source1"
+				"     validateSchema: false) ~> source1",
+				"source1 aggregate() ~> aggregate1"
 			]
 		}
 	}
